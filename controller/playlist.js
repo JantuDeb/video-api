@@ -118,6 +118,7 @@ exports.deletePlaylist = async (req, res) => {
     );
     res.status(200).send({ success: true, playlist });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ success: false, message: error.message });
   }
 };
