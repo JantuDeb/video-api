@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
+const corsConFig = require("./config/cors-config")
 const app = express();
 require("dotenv").config();
 require("./config/database").connect();
@@ -18,10 +19,6 @@ app.use(
   })
 );
 
-const corsConFig = {
-  origin:['http://localhost:3000','https://ionvu-live.netlify.app/','https://deploy-preview-5--ionvu-live.netlify.app'],
-  credentials: true,
-};
 //cors middleware
 app.use(cors(corsConFig));
 
@@ -31,6 +28,7 @@ const category = require("./routes/category");
 const video = require("./routes/video");
 const like = require("./routes/like");
 const playlist = require("./routes/playlist");
+const watchLater = require("./routes/watch-later");
 
 //routes middlewares
 app.use("/api/v1", user); // user routes
@@ -38,5 +36,6 @@ app.use("/api/v1", category); // category routes
 app.use("/api/v1", video); // video routes
 app.use("/api/v1", like); // like routes
 app.use("/api/v1", playlist); // playlist routes
+app.use("/api/v1", watchLater); // watch later routes
 
 module.exports = app;
