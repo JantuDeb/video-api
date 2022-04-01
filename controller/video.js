@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary");
+const { findById, findByIdAndUpdate } = require("../model/video");
 const Video = require("../model/video");
 exports.addVideo = async (req, res) => {
   const {
@@ -66,12 +67,40 @@ exports.getVideos = async (req, res) => {
 exports.getVideo = async (req, res) => {
   const { videoId } = req.params;
   try {
-    const video = await Video.findById(videoId,{}, {lean:true}).populate("category");
+    const video = await Video.findById(videoId, {}, { lean: true }).populate(
+      "category"
+    );
     if (!video)
       return res
         .status(404)
         .send({ success: false, message: "No video found with this id" });
 
+    // return  a video
+    res.status(200).send({ success: true, video });
+  } catch (error) {
+    // if error return 500
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.updateViewCount = async (req, res) => {
+  const { videoId } = req.params;
+  try {
+    const video = await Video.findByIdAndUpdate(
+      { _id: videoId },
+      {
+        $inc: {
+          "statistics.viewCount": 1,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    if (!video)
+      return res
+        .status(404)
+        .send({ success: false, message: "No video found with this id" });
     // return  a video
     res.status(200).send({ success: true, video });
   } catch (error) {
