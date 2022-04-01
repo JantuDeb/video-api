@@ -22,10 +22,21 @@ const videoSchema = new mongoose.Schema(
       default: "",
     },
 
+    videoURL: {
+      id: {
+        type: String,
+        default: "",
+      },
+      url: {
+        type: String,
+        required: [true, "Video URL is required"],
+        default:""
+      },
+    },
     thumbnails: {
       id: {
         type: String,
-        required: [true, "At least one thumbnail is required"],
+        // required: [true, "At least one thumbnail is required"],
       },
       url: {
         type: String,

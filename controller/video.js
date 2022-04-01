@@ -62,3 +62,20 @@ exports.getVideos = async (req, res) => {
     res.status(500).send({ success: false, message: error.message });
   }
 };
+
+exports.getVideo = async (req, res) => {
+  const { videoId } = req.params;
+  try {
+    const video = await Video.findById(videoId,{}, {lean:true}).populate("category");
+    if (!video)
+      return res
+        .status(404)
+        .send({ success: false, message: "No video found with this id" });
+
+    // return  a video
+    res.status(200).send({ success: true, video });
+  } catch (error) {
+    // if error return 500
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
