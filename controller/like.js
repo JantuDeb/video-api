@@ -14,12 +14,6 @@ exports.addLike = async (req, res) => {
         .status(400)
         .send({ success: false, error: "You already liked this video" });
 
-    let newLike = await Like.create({ video: videoId, user: req.userId });
-    newLike = await newLike.populate("video");
-    if (!newLike)
-      return res
-        .status(404)
-        .send({ success: false, error: "Something went wrong" });
     await Video.findByIdAndUpdate(
       { _id: videoId },
       {
@@ -28,6 +22,13 @@ exports.addLike = async (req, res) => {
         },
       }
     );
+    let newLike = await Like.create({ video: videoId, user: req.userId });
+    newLike = await newLike.populate("video");
+    if (!newLike)
+      return res
+        .status(404)
+        .send({ success: false, error: "Something went wrong" });
+
     res.status(201).send({ success: true, like: newLike });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
@@ -42,14 +43,6 @@ exports.removeLike = async (req, res) => {
       .send({ success: false, error: "Provide a video ID" });
 
   try {
-    const like = await Like.findOneAndDelete({
-      video: videoId,
-      user: req.userId,
-    });
-    if (!like)
-      return res
-        .status(404)
-        .send({ success: false, error: "This video not in like" });
 
     await Video.findByIdAndUpdate(
       { _id: videoId },
@@ -59,6 +52,15 @@ exports.removeLike = async (req, res) => {
         },
       }
     );
+    const like = await Like.findOneAndDelete({
+      video: videoId,
+      user: req.userId,
+    });
+    if (!like)
+      return res
+        .status(404)
+        .send({ success: false, error: "This video not in like" });
+
     res.status(200).send({ success: true, like });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
