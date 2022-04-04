@@ -30,6 +30,7 @@ const like = require("./routes/like");
 const playlist = require("./routes/playlist");
 const watchLater = require("./routes/watch-later");
 const history = require("./routes/history");
+const note = require("./routes/note");
 
 //routes middlewares
 app.use("/api/v1", user); // user routes
@@ -39,5 +40,6 @@ app.use("/api/v1", like); // like routes
 app.use("/api/v1", playlist); // playlist routes
 app.use("/api/v1", watchLater); // watch  later routes
 app.use("/api/v1", history); // history routes
+app.use("/api/v1", note); // note routes
 
 module.exports = app;

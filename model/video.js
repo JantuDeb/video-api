@@ -30,7 +30,7 @@ const videoSchema = new mongoose.Schema(
       url: {
         type: String,
         required: [true, "Video URL is required"],
-        default:""
+        default: "",
       },
     },
     thumbnails: {
