@@ -248,7 +248,7 @@ exports.updateUserDetails = async (req, res) => {
   const { name, email } = req.body;
 
   try {
-    const user = await User.findById(req.userId).select("+password");
+    const user = await User.findById(req.userId);
     // if user not found
     if (!user)
       return res
@@ -280,7 +280,7 @@ exports.updateUserDetails = async (req, res) => {
     // update user in db
     const newUser = await User.findByIdAndUpdate(
       user.id,
-      { name, email, photo: photo.id ? photo : user.photo },
+      { name:name?name:user.name, email:email?email:user.email, photo: photo.id ? photo : user.photo },
       { new: true }
     );
     res.status(200).send({ success: true, user: newUser });
