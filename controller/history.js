@@ -71,6 +71,8 @@ exports.removeAllHistory = async (req, res) => {
     const result = await History.deleteMany({
       user: req.userId,
     });
+    if (result.deletedCount === 0)
+      return res.status(400).send({ success: false, message: "no history found" });
     res.status(200).send({ success: true, result });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });

@@ -1,4 +1,5 @@
 const Playlist = require("../model/playlist");
+const video = require("../model/video");
 exports.createPlaylist = async (req, res) => {
   const { name, description } = req.body;
   if (!name)
