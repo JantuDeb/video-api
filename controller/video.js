@@ -11,10 +11,10 @@ exports.addVideo = async (req, res) => {
     channelTitle,
     duration,
   } = req.body;
-  if (!req.files?.thumbnails)
+  if (!req.files?.thumbnails || !req.files?.video)
     return res
       .status(400)
-      .send({ success: false, message: "Upload a thumbnail" });
+      .send({ success: false, message: "Upload a thumbnail and video" });
 
   if (!title || !categoryId || !duration)
     return res
@@ -26,7 +26,16 @@ exports.addVideo = async (req, res) => {
       req.files.thumbnails.tempFilePath,
       { folder: "thumbnails" }
     );
+    const videoResponse = await cloudinary.v2.uploader.upload(
+      req.files.video.tempFilePath,
+      { folder: "video" ,resource_type: "video"}
+    );
+
     const thumbnails = { id: public_id, url: secure_url };
+    const videoURL = {
+      id: videoResponse.public_id,
+      url: videoResponse.secure_url,
+    };
 
     const video = await Video.create({
       title,
@@ -37,6 +46,7 @@ exports.addVideo = async (req, res) => {
       channelId,
       channelTitle,
       duration,
+      videoURL
     });
 
     res.status(201).send({ success: true, video });
